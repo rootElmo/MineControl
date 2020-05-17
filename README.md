@@ -9,3 +9,7 @@ The script was made to avoid constant switching between tmux-screens and to gene
 ## To-do:
 
 * Fix possibly infinite 'while'-loops with some sort of time-out
+* In function ***srv_stop*** instead of trusting the _sleep_ timer to wait for saving of blocks etc. find a more reliable solution for checking if saved or not (if saving takes a long time, server might shutdown before saving of blocks is completed).
+* Use a function to check status of ***server.jar*** to make code more compact
+* Learn more about tmux to increase complexity of functions and reliability.
+
