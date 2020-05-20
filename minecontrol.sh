@@ -1,27 +1,27 @@
 #!/bin/bash
 
-USERNAME="root"
+USERNAME="minecraft"
 MAXRAM=1024
 MINRAM=1024
 OPTIONS='nogui'
 SERVICE='server.jar'
 INVOCATION="java -Xmx${MAXRAM}M -Xms${MINRAM}M -jar ${SERVICE} ${OPTIONS}"
-LOG="/home/elmor/minecraft/logs/latest.log"
+LOG="/home/${USERNAME}/minecraft/logs/latest.log"
 SPINNER=( "@aa" "a@a" "aa@" )
 
 srv_start(){
-	if pgrep -u root -f server.jar > /dev/null ; then
+	if sys_status > /dev/null ; then
 		echo "server.jar is already running!"
 	else
 		echo "Starting server.jar"
-		cd /home/elmor/minecraft  
+		cd /home/${USERNAME}/minecraft  
 		tmux new -d -s minecraft_server ${INVOCATION}
 		gfx_spin &
 		PID=$!
 		disown
 		sleep 4
 		kill $PID
-		if pgrep -u root -f server.jar > /dev/null ; then
+		if sys_status > /dev/null ; then
 			echo -e "\rserver.jar is now running!"
 		else
 			echo -e "\rERROR! Could not start server.jar"
@@ -52,7 +52,7 @@ srv_start(){
 }
 
 srv_stop(){
-	if pgrep -u root -f server.jar > /dev/null ; then
+	if sys_status > /dev/null ; then
 		echo "Stopping server.jar"
 		gfx_spin &
 		PID=$!
@@ -68,7 +68,7 @@ srv_stop(){
 		echo "server.jar was not running"
 	
 	fi
-	if pgrep -u root -f server.jar > /dev/null ; then
+	if sys_status > /dev/null ; then
 		echo "server.jar could not be stopped!"
 	else
 		echo "server.jar is stopped"
@@ -77,7 +77,7 @@ srv_stop(){
 }
 
 srv_status(){
-	if pgrep -u root -f server.jar > /dev/null ; then
+	if sys_status > /dev/null ; then
 		echo "server.jar is running!"
 	else
 		echo "server.jar is not running"
@@ -85,7 +85,7 @@ srv_status(){
 }
 
 ctl_opentmux(){
-	if pgrep -u root -f server.jar > /dev/null ; then
+	if sys_status > /dev/null ; then
 		echo "Opening tmux screen"
 		gfx_sleep
 		tmux a -t minecraft_server
@@ -105,7 +105,7 @@ ctl_help(){
 }
 
 sys_status(){
-	pgrep -u ${USERNAME} -f ${SERVICE}
+	pgrep -f ${SERVICE}
 }
 
 gfx_spin(){
